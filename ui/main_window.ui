@@ -24,56 +24,56 @@
           <item row="1" column="0">
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>y_Scale</string>
+             <string>Initial Population</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLineEdit" name="y_scale_line_edit">
+           <widget class="QLineEdit" name="initial_population_line_edit">
             <property name="text">
-             <string>1</string>
+             <string/>
             </property>
            </widget>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>Y-Offset</string>
+             <string>Max Population</string>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLineEdit" name="y_offset_line_edit">
+           <widget class="QLineEdit" name="max_population_line_edit">
             <property name="text">
-             <string>0</string>
+             <string/>
             </property>
            </widget>
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>X_Scale</string>
+             <string>Growth Rate</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="growth_rate_line_edit">
+            <property name="text">
+             <string/>
             </property>
            </widget>
           </item>
           <item row="4" column="0">
            <widget class="QLabel" name="label_4">
             <property name="text">
-             <string>X_Offset</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="x_scale_line_edit">
-            <property name="text">
-             <string>1</string>
+             <string>Number of Steps</string>
             </property>
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QLineEdit" name="x_offset_line_edit">
+           <widget class="QLineEdit" name="steps_line_edit">
             <property name="text">
-             <string>0</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -101,7 +101,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

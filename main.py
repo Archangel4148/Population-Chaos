@@ -14,6 +14,7 @@ class PopulationWindow(QMainWindow):
         self.ui.setupUi(self)
 
         # Set up the plot
+        pg.setConfigOptions(background='w', foreground='k')
         plot_area = self.ui.plot_area_layout
         plot_widget = pg.PlotWidget()
         plot_area.addWidget(plot_widget)
@@ -21,16 +22,16 @@ class PopulationWindow(QMainWindow):
 
         # Set up validators for the line edits to allow only float values
         float_validator = QDoubleValidator(self)
-        self.ui.y_scale_line_edit.setValidator(float_validator)
-        self.ui.y_offset_line_edit.setValidator(float_validator)
-        self.ui.x_scale_line_edit.setValidator(float_validator)
-        self.ui.x_offset_line_edit.setValidator(float_validator)
+        self.ui.initial_population_line_edit.setValidator(float_validator)
+        self.ui.max_population_line_edit.setValidator(float_validator)
+        self.ui.growth_rate_line_edit.setValidator(float_validator)
+        self.ui.steps_line_edit.setValidator(float_validator)
 
         # Connecting signals
-        self.ui.y_scale_line_edit.editingFinished.connect(self.factors_changed)
-        self.ui.y_offset_line_edit.editingFinished.connect(self.factors_changed)
-        self.ui.x_scale_line_edit.editingFinished.connect(self.factors_changed)
-        self.ui.x_offset_line_edit.editingFinished.connect(self.factors_changed)
+        self.ui.initial_population_line_edit.editingFinished.connect(self.factors_changed)
+        self.ui.max_population_line_edit.editingFinished.connect(self.factors_changed)
+        self.ui.growth_rate_line_edit.editingFinished.connect(self.factors_changed)
+        self.ui.steps_line_edit.editingFinished.connect(self.factors_changed)
         self.ui.reset_button.pressed.connect(self.reset)
 
         # Variables for plotting
@@ -38,36 +39,41 @@ class PopulationWindow(QMainWindow):
         self.y: np.ndarray | None = None
 
         # Initialize default values
-        self.default_y_scale = self.y_scale = 1
-        self.default_y_offset = self.y_offset = 0
-        self.default_x_scale = self.x_scale = 1
-        self.default_x_offset = self.x_offset = 0
+        self.default_initial_population = self.initial_population = 10
+        self.default_max_population = self.max_population = 250
+        self.default_growth_rate = self.growth_rate = 0.1
+        self.default_num_steps = self.num_steps = 100
 
         # Populate the plot initially
-        self.factors_changed()
+        self.factors_changed(True)
 
     def factors_changed(self, override_text: bool = False):
         self.plot_item.clear()
         if override_text:
-            self.ui.y_offset_line_edit.setText(str(self.y_offset))
-            self.ui.y_scale_line_edit.setText(str(self.y_scale))
-            self.ui.x_offset_line_edit.setText(str(self.x_offset))
-            self.ui.x_scale_line_edit.setText(str(self.x_scale))
+            self.ui.initial_population_line_edit.setText(str(self.initial_population))
+            self.ui.max_population_line_edit.setText(str(self.max_population))
+            self.ui.growth_rate_line_edit.setText(str(self.growth_rate))
+            self.ui.steps_line_edit.setText(str(self.num_steps))
         else:
-            self.y_offset = float(self.ui.y_offset_line_edit.text())
-            self.y_scale = float(self.ui.y_scale_line_edit.text())
-            self.x_offset = float(self.ui.x_offset_line_edit.text())
-            self.x_scale = float(self.ui.x_scale_line_edit.text())
+            self.initial_population = int(self.ui.initial_population_line_edit.text())
+            self.max_population = int(self.ui.max_population_line_edit.text())
+            self.growth_rate = float(self.ui.growth_rate_line_edit.text())
+            self.num_steps = int(self.ui.steps_line_edit.text())
 
-        self.x = np.linspace(0, 100, 1000)
-        self.y = self.y_scale * np.sin(self.x * self.x_scale + self.x_offset) + self.y_offset
-        self.plot_item.plot(self.x, self.y)
+        self.x = np.linspace(0, self.num_steps, self.num_steps * 10)
+
+        # Using logistic growth model
+        self.y = self.max_population / (
+                1 + ((self.max_population - self.initial_population) / self.initial_population) * np.exp(
+            -self.growth_rate * self.x))
+
+        self.plot_item.plot(self.x, self.y, pen=pg.mkPen('b'))
 
     def reset(self):
-        self.x_offset = self.default_x_offset
-        self.y_offset = self.default_y_offset
-        self.x_scale = self.default_x_scale
-        self.y_scale = self.default_y_scale
+        self.initial_population = self.default_initial_population
+        self.max_population = self.default_max_population
+        self.growth_rate = self.default_growth_rate
+        self.num_steps = self.default_num_steps
         self.factors_changed(True)
 
 
